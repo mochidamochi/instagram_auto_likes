@@ -7,7 +7,6 @@ import time
 import logging
 import datetime
 
-#sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), './vendor'))
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
@@ -26,7 +25,7 @@ logger.addHandler(sh)
 #Webdriver
 options = Options()
 options.add_argument('--headless')
-#browser = webdriver.Chrome(__file__ + '/driver/chromedriver',chrome_options=options)
+options.add_argument('--no-sandbox')
 browser= webdriver.Chrome('chromedriver',chrome_options=options)
 
 #URL

@@ -7,16 +7,16 @@ import time
 browser = webdriver.Chrome(executable_path='[chromedriver.exeのパス]')
 
 #URL
-loginURL = "https://www.instagram.com/"
-tagSearchURL = "https://www.instagram.com/explore/tags/{}/?hl=ja"
+MAIN_URL = "https://www.instagram.com/"
+TAG_SEARCH_URL = MAIN_URL + "explore/tags/{}/?hl=ja"
 
 #selectors
-loginPath = '//*[@id="react-root"]/section/main/article/div[2]/div[2]/p/a'
-likePath = "//button/span[@class='glyphsSpriteHeart__outline__24__grey_9 u-__7']"
-likeButtonPath = "//button[@class='dCJp8 afkep _0mzm-']"
+LOGIN_PATH = '//*[@id="react-root"]/section/main/article/div[2]/div[2]/p/a'
+LIKE_PATH = "//button/span[@class='glyphsSpriteHeart__outline__24__grey_9 u-__7']"
+LIKE_BUTTON_PATH = "//button[@class='dCJp8 afkep _0mzm-']"
 
-mediaSelector = 'div._9AhH0' #表示されているメディアのwebelement
-nextPagerSelector = 'a.coreSpriteRightPaginationArrow' #次へボタン
+MEDIA_SELECTOR = 'div._9AhH0' #表示されているメディアのwebelement
+NEXT_PAGE_SELECTOR = 'a.coreSpriteRightPaginationArrow' #次へボタン
 
 #USER INFO
 username = "[username]"
@@ -29,9 +29,9 @@ likedMax = 500
 if __name__ == '__main__':
 
     #login 
-    browser.get(loginURL)
+    browser.get(MAIN_URL)
     time.sleep(3)
-    browser.find_element_by_xpath(loginPath).click()
+    browser.find_element_by_xpath(LOGIN_PATH).click()
     time.sleep(3)
     usernameField = browser.find_element_by_name('username')
     usernameField.send_keys(username)
@@ -42,21 +42,21 @@ if __name__ == '__main__':
     #tag search
     time.sleep(3)
     encodedTag = urllib.parse.quote(tagName) #普通にURLに日本語は入れられないので、エンコードする
-    encodedURL = tagSearchURL.format(encodedTag)
+    encodedURL = TAG_SEARCH_URL.format(encodedTag)
     print("encodedURL:{}".format(encodedURL))
     browser.get(encodedURL)
 
     #media click
     time.sleep(3)
     browser.implicitly_wait(10)
-    browser.find_element_by_css_selector(mediaSelector).click()
+    browser.find_element_by_css_selector(MEDIA_SELECTOR).click()
     
     #次へボタンが表示されないか、いいねが一定数いくまで
     while likedCounter < likedMax:
         time.sleep(3)
         try:
-            browser.find_element_by_xpath(likePath)
-            browser.find_element_by_xpath(likeButtonPath).click()
+            browser.find_element_by_xpath(LIKE_PATH)
+            browser.find_element_by_xpath(LIKE_BUTTON_PATH).click()
             likedCounter += 1
             print("liked {}".format(likedCounter))
         except:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
         #次へ
         try:
-            browser.find_element_by_css_selector(nextPagerSelector).click()
+            browser.find_element_by_css_selector(NEXT_PAGE_SELECTOR).click()
         except:
             break
 

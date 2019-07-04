@@ -1,10 +1,33 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+#!/usr/bin/env python
+
+import os
+import sys
 import urllib.parse
 import time
+import logging
+import datetime
+
+#sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), './vendor'))
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+
+
+toDay = datetime.datetime.today().strftime("%Y_%m_%d_%H_%M")
+
+#Log
+logger = logging.getLogger('LoggingTest')
+logger.setLevel(10)
+fh = logging.FileHandler('log/' + toDay + '.log')
+logger.addHandler(fh)
+sh = logging.StreamHandler()
+logger.addHandler(sh)
 
 #Webdriver
-browser = webdriver.Chrome(executable_path='[chromedriver.exeのパス]')
+options = Options()
+options.add_argument('--headless')
+#browser = webdriver.Chrome(__file__ + '/driver/chromedriver',chrome_options=options)
+browser= webdriver.Chrome('chromedriver',chrome_options=options)
 
 #URL
 MAIN_URL = "https://www.instagram.com/"
@@ -17,17 +40,22 @@ LIKE_BUTTON_PATH = "//button[@class='dCJp8 afkep _0mzm-']"
 
 MEDIA_SELECTOR = 'div._9AhH0' #表示されているメディアのwebelement
 NEXT_PAGE_SELECTOR = 'a.coreSpriteRightPaginationArrow' #次へボタン
-
-#USER INFO
-username = "[username]"
-password = "[password]"
-#params
-tagName = "[タグ名]"
 likedCounter = 0
-likedMax = 500
 
 if __name__ == '__main__':
 
+    argv = sys.argv
+    argc = len(argv)
+    if (argc != 5):
+        logger.info("args[" + str(argc) + "]")
+        logging.error("not much args!")
+        quit()
+    
+    #USER INFO
+    username = argv[1]
+    password = argv[2]
+    tagName = argv[3]
+    likedMax = int(argv[4])
     #login 
     browser.get(MAIN_URL)
     time.sleep(3)
@@ -43,7 +71,7 @@ if __name__ == '__main__':
     time.sleep(3)
     encodedTag = urllib.parse.quote(tagName) #普通にURLに日本語は入れられないので、エンコードする
     encodedURL = TAG_SEARCH_URL.format(encodedTag)
-    print("encodedURL:{}".format(encodedURL))
+    logger.info("encodedURL:{}".format(encodedURL))
     browser.get(encodedURL)
 
     #media click
@@ -58,10 +86,10 @@ if __name__ == '__main__':
             browser.find_element_by_xpath(LIKE_PATH)
             browser.find_element_by_xpath(LIKE_BUTTON_PATH).click()
             likedCounter += 1
-            print("liked {}".format(likedCounter))
+            logger.info("liked {}".format(likedCounter))
         except:
             #読み込まれなかったり既にいいねしているならパス
-            print("pass")
+            logger.info("pass")
             pass
 
         #次へ
@@ -70,4 +98,5 @@ if __name__ == '__main__':
         except:
             break
 
-    print("You liked {} media".format(likedCounter))
+    logger.info("You liked {} media".format(likedCounter))
+    logger.info("\007")

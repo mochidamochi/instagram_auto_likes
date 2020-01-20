@@ -12,8 +12,8 @@ TAG_SEARCH_URL = MAIN_URL + "explore/tags/{}/?hl=ja"
 
 #selectors
 LOGIN_PATH = '//*[@id="react-root"]/section/main/article/div[2]/div[2]/p/a'
-LIKE_PATH = "//button/span[@class='glyphsSpriteHeart__outline__24__grey_9 u-__7']"
-LIKE_BUTTON_PATH = "//button[@class='dCJp8 afkep _0mzm-']"
+LIKE_PATH = '//button[@class="wpO6b "]/*[name()="svg"][@aria-label="いいね！"]'
+LIKE_BUTTON_PATH = '//button[@class="wpO6b "]'
 
 MEDIA_SELECTOR = 'div._9AhH0' #表示されているメディアのwebelement
 NEXT_PAGE_SELECTOR = 'a.coreSpriteRightPaginationArrow' #次へボタン
@@ -24,7 +24,7 @@ password = "[password]"
 #params
 tagName = "[タグ名]"
 likedCounter = 0
-likedMax = 500
+likedMax = 100
 
 if __name__ == '__main__':
 
